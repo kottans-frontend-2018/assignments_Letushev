@@ -472,7 +472,7 @@ strong {
 }
 
 .urgency .choicesWrapper div{
-  padding-left: 60px !important;
+  padding-left: 60px;
   margin-top: auto;
   font-size: .8rem;
 }
