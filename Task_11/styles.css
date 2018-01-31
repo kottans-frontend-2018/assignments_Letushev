@@ -195,6 +195,15 @@ h1 {
   background: #f7f7fa url('images/social_account.png') no-repeat center 30% / 40%;
 }
 
+input[type=radio] {
+  position:absolute;
+  left:-10000px;
+  top:auto;
+  width:1px;
+  height:1px;
+  overflow:hidden;
+}
+
 input[type=radio] + label {
   margin: 4px;
   box-sizing: content-box;
