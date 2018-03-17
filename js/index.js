@@ -67,28 +67,7 @@
 /******/ })
 /************************************************************************/
 /******/ ([
-/* 0 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-const elements = {
-  searchInput:       document.getElementById('search-input'),
-  searchButton:      document.getElementById('search-button'),
-
-  historyDropdown:   document.querySelector('.history-dropdown'),
-  favoritesDropdown: document.querySelector('.favorites-dropdown'),
-
-  celsiusButton:     document.querySelector('.celsius-button'),
-  fahrenheitButton:  document.querySelector('.fahrenheit-button'),
-
-  currentWrapper:    document.querySelector('.current-wrapper'),
-  forecastWrapper:   document.querySelector('.forecast-wrapper')
-};
-/* harmony export (immutable) */ exports["a"] = elements;
-
-
-
-/***/ }),
+/* 0 */,
 /* 1 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -99,7 +78,9 @@ Object.defineProperty(exports, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__Search__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__Storage__ = __webpack_require__(7);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__Degree__ = __webpack_require__(4);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__vendor_utils__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__utils_renders__ = __webpack_require__(14);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_6__utils_api__ = __webpack_require__(15);
+
 
 
 
@@ -116,11 +97,6 @@ class App {
       degree: 'M',
       urlCityName: new URLSearchParams(location.search).get('city') || '',
     };
-
-    this.request = {
-      API_URL: 'https://api.weatherbit.io/v2.0',
-      API_KEY: '3182fa324b4340ef9cb632451ebb05c1' // e83a8a7ac30d465b93bd8e2bb270bbf7
-    }
 
     this.bindCallbacks();
 
@@ -155,23 +131,10 @@ class App {
   }
 
   getWeather(location) {
-    Promise.all([ this.get(`/current?lat=${location.lat}&lon=${location.lng}&units=${this.state.degree}`)
-                    .then(info => info.data[0]),
-                  this.get(`/forecast/daily?lat=${location.lat}&lon=${location.lng}&days=8&units=${this.state.degree}`)
-                    .then(info => info.data) ])
+    __webpack_require__.i(__WEBPACK_IMPORTED_MODULE_6__utils_api__["a" /* getWeatherInfo */])(location, this.state.degree)
       .then(data => this.render(data))
       .then(() => this.addToHistoryStack())
       .catch(() => alert('Server responded with error. Please, try again later...'));
-  }
-
-  get(query) {
-    const url = `${this.request.API_URL}${query}&key=${this.request.API_KEY}`;
-    return  fetch(url)
-              .then(response => {
-                if (response.ok) {
-                  return response.json();
-                }
-              });
   }
 
   updateState(nextState) {
@@ -184,18 +147,18 @@ class App {
     let newCurrent = data[0];
     let newForecast = data[1];
 
-    newCurrent.country = __WEBPACK_IMPORTED_MODULE_5__vendor_utils__["a" /* getCountryName */](newCurrent.country_code);
+    newCurrent.country = __WEBPACK_IMPORTED_MODULE_5__utils_renders__["a" /* getCountryName */](newCurrent.country_code);
     newCurrent.temp = Math.round(newCurrent.temp);
     newCurrent.app_temp = Math.round(newCurrent.app_temp);
-    newCurrent.weather.icon = __WEBPACK_IMPORTED_MODULE_5__vendor_utils__["b" /* getSkyconClass */](newCurrent.weather.code, newCurrent.weather.icon);
+    newCurrent.weather.icon = __WEBPACK_IMPORTED_MODULE_5__utils_renders__["b" /* getSkyconClass */](newCurrent.weather.code, newCurrent.weather.icon);
     newCurrent.pres = Math.round(newCurrent.pres);
 
     newForecast = newForecast.map(day => {
-      day.day = __WEBPACK_IMPORTED_MODULE_5__vendor_utils__["c" /* getWeekDay */](day.datetime);
-      day.datetime = __WEBPACK_IMPORTED_MODULE_5__vendor_utils__["d" /* renderDate */](day.datetime);
+      day.day = __WEBPACK_IMPORTED_MODULE_5__utils_renders__["c" /* getWeekDay */](day.datetime);
+      day.datetime = __WEBPACK_IMPORTED_MODULE_5__utils_renders__["d" /* renderDate */](day.datetime);
       day.max_temp = Math.round(day.max_temp);
       day.min_temp = Math.round(day.min_temp);
-      day.weather.icon = __WEBPACK_IMPORTED_MODULE_5__vendor_utils__["b" /* getSkyconClass */](day.weather.code, day.weather.icon);
+      day.weather.icon = __WEBPACK_IMPORTED_MODULE_5__utils_renders__["b" /* getSkyconClass */](day.weather.code, day.weather.icon);
       return day;
     });
 
@@ -205,7 +168,7 @@ class App {
   showWeather() {
     this.current.update({current: this.state.current});
     this.forecast.update({forecast: this.state.forecast});
-    __WEBPACK_IMPORTED_MODULE_5__vendor_utils__["e" /* startSkycons */]();
+    __WEBPACK_IMPORTED_MODULE_5__utils_renders__["e" /* startSkycons */]();
   }
 
   onSearch(location) {
@@ -269,7 +232,7 @@ module.exports = __webpack_require__.p + "scss/styles.css";
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__vendor_elements__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_elements__ = __webpack_require__(13);
 
 
 class Current {
@@ -291,7 +254,7 @@ class Current {
   }
 
   showCurrentWeather() {
-    __WEBPACK_IMPORTED_MODULE_0__vendor_elements__["a" /* elements */].currentWrapper.innerHTML =
+    __WEBPACK_IMPORTED_MODULE_0__utils_elements__["a" /* elements */].currentWrapper.innerHTML =
      `<section>
         <h1>${this.state.current.city_name}<span class="country">${this.state.current.country}</span></h1>
         <div class="current-main-values">
@@ -348,7 +311,7 @@ class Current {
 
     star.addEventListener('click', () => this.props.onStar(this.state.current.city_name));
 
-    __WEBPACK_IMPORTED_MODULE_0__vendor_elements__["a" /* elements */].currentWrapper.appendChild(star);
+    __WEBPACK_IMPORTED_MODULE_0__utils_elements__["a" /* elements */].currentWrapper.appendChild(star);
   }
 
 }
@@ -361,7 +324,7 @@ class Current {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__vendor_elements__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_elements__ = __webpack_require__(13);
 
 
 class Degree {
@@ -372,16 +335,16 @@ class Degree {
       degree: 'M'
     }
 
-    __WEBPACK_IMPORTED_MODULE_0__vendor_elements__["a" /* elements */].celsiusButton.classList.add('active');
+    __WEBPACK_IMPORTED_MODULE_0__utils_elements__["a" /* elements */].celsiusButton.classList.add('active');
 
-    __WEBPACK_IMPORTED_MODULE_0__vendor_elements__["a" /* elements */].celsiusButton.addEventListener('click', e => {
+    __WEBPACK_IMPORTED_MODULE_0__utils_elements__["a" /* elements */].celsiusButton.addEventListener('click', e => {
       if (!e.target.classList.contains('active')) {
         this.updateState({degree: 'M'});
         this.props.onDegreeChange('M', this.convertToC);
       }
     });
 
-    __WEBPACK_IMPORTED_MODULE_0__vendor_elements__["a" /* elements */].fahrenheitButton.addEventListener('click', e => {
+    __WEBPACK_IMPORTED_MODULE_0__utils_elements__["a" /* elements */].fahrenheitButton.addEventListener('click', e => {
       if (!e.target.classList.contains('active')) {
         this.updateState({degree: 'I'});
         this.props.onDegreeChange('I', this.convertToF);
@@ -400,7 +363,7 @@ class Degree {
   }
 
   changeActiveButton(degree) {
-    const targetButton = degree === 'M' ? __WEBPACK_IMPORTED_MODULE_0__vendor_elements__["a" /* elements */].celsiusButton : __WEBPACK_IMPORTED_MODULE_0__vendor_elements__["a" /* elements */].fahrenheitButton;
+    const targetButton = degree === 'M' ? __WEBPACK_IMPORTED_MODULE_0__utils_elements__["a" /* elements */].celsiusButton : __WEBPACK_IMPORTED_MODULE_0__utils_elements__["a" /* elements */].fahrenheitButton;
 
     if (!targetButton.classList.contains('active')) {
       const sibling = targetButton.nextElementSibling || targetButton.previousElementSibling;
@@ -428,7 +391,7 @@ class Degree {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__vendor_elements__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_elements__ = __webpack_require__(13);
 
 
 class Forecast {
@@ -451,7 +414,7 @@ class Forecast {
   showForecast() {
     let forecast = '';
     this.state.forecast.forEach(dayWeather => forecast += this.addDayWeather(dayWeather));
-    __WEBPACK_IMPORTED_MODULE_0__vendor_elements__["a" /* elements */].forecastWrapper.innerHTML = forecast;
+    __WEBPACK_IMPORTED_MODULE_0__utils_elements__["a" /* elements */].forecastWrapper.innerHTML = forecast;
   }
 
   addDayWeather(dayWeather) {
@@ -481,7 +444,7 @@ class Forecast {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__vendor_elements__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_elements__ = __webpack_require__(13);
 
 
 class Search {
@@ -493,13 +456,13 @@ class Search {
       API_URL: 'https://maps.googleapis.com/maps/api/geocode/json',
       API_KEY: 'AIzaSyCWt-oX6XfeWXSXMS2dCj5_tmbmOf6-D9A'
     }
-    this.autocomplete = new google.maps.places.Autocomplete(__WEBPACK_IMPORTED_MODULE_0__vendor_elements__["a" /* elements */].searchInput, {types: ['(cities)']});
+    this.autocomplete = new google.maps.places.Autocomplete(__WEBPACK_IMPORTED_MODULE_0__utils_elements__["a" /* elements */].searchInput, {types: ['(cities)']});
 
     this.getPlaceFromAutocomplete = this.getPlaceFromAutocomplete.bind(this);
 
     this.autocomplete.addListener('place_changed', this.getPlaceFromAutocomplete);
-    __WEBPACK_IMPORTED_MODULE_0__vendor_elements__["a" /* elements */].searchButton.addEventListener('click', () => {
-      this.findLocationByCityName(__WEBPACK_IMPORTED_MODULE_0__vendor_elements__["a" /* elements */].searchInput.value.trim());
+    __WEBPACK_IMPORTED_MODULE_0__utils_elements__["a" /* elements */].searchButton.addEventListener('click', () => {
+      this.findLocationByCityName(__WEBPACK_IMPORTED_MODULE_0__utils_elements__["a" /* elements */].searchInput.value.trim());
     });
   }
 
@@ -559,7 +522,7 @@ class Search {
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__vendor_elements__ = __webpack_require__(0);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__utils_elements__ = __webpack_require__(13);
 
 
 class Storage {
@@ -607,15 +570,15 @@ class Storage {
   }
 
   showDropdowns() {
-    __WEBPACK_IMPORTED_MODULE_0__vendor_elements__["a" /* elements */].historyDropdown.innerHTML = '';
-    __WEBPACK_IMPORTED_MODULE_0__vendor_elements__["a" /* elements */].favoritesDropdown.innerHTML = '';
+    __WEBPACK_IMPORTED_MODULE_0__utils_elements__["a" /* elements */].historyDropdown.innerHTML = '';
+    __WEBPACK_IMPORTED_MODULE_0__utils_elements__["a" /* elements */].favoritesDropdown.innerHTML = '';
 
     this.state.history.forEach(cityName => {
-      this.addToDropdown(cityName, __WEBPACK_IMPORTED_MODULE_0__vendor_elements__["a" /* elements */].historyDropdown);
+      this.addToDropdown(cityName, __WEBPACK_IMPORTED_MODULE_0__utils_elements__["a" /* elements */].historyDropdown);
     });
 
     this.state.favorites.forEach(cityName => {
-      this.addToDropdown(cityName, __WEBPACK_IMPORTED_MODULE_0__vendor_elements__["a" /* elements */].favoritesDropdown);
+      this.addToDropdown(cityName, __WEBPACK_IMPORTED_MODULE_0__utils_elements__["a" /* elements */].favoritesDropdown);
     })
 
     this.showClearHistoryButton();
@@ -631,7 +594,7 @@ class Storage {
         this.updateState({history: [this.state.last]});
       });
 
-      __WEBPACK_IMPORTED_MODULE_0__vendor_elements__["a" /* elements */].historyDropdown.appendChild(clearHistoryButton);
+      __WEBPACK_IMPORTED_MODULE_0__utils_elements__["a" /* elements */].historyDropdown.appendChild(clearHistoryButton);
     }
   }
 
@@ -644,7 +607,7 @@ class Storage {
       this.props.onDropdownItemClick(cityName);
     })
 
-    if (container === __WEBPACK_IMPORTED_MODULE_0__vendor_elements__["a" /* elements */].favoritesDropdown) {
+    if (container === __WEBPACK_IMPORTED_MODULE_0__utils_elements__["a" /* elements */].favoritesDropdown) {
       this.addUnstarButton(dropdownItem, cityName);
     }
 
@@ -681,7 +644,17 @@ class Storage {
 
 
 /***/ }),
-/* 8 */
+/* 8 */,
+/* 9 */,
+/* 10 */
+/***/ (function(module, exports, __webpack_require__) {
+
+__webpack_require__(1);
+module.exports = __webpack_require__(2);
+
+
+/***/ }),
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -937,11 +910,34 @@ const COUNTRIES = {
 
 
 /***/ }),
-/* 9 */
+/* 12 */,
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__countries__ = __webpack_require__(8);
+const elements = {
+  searchInput:       document.getElementById('search-input'),
+  searchButton:      document.getElementById('search-button'),
+
+  historyDropdown:   document.querySelector('.history-dropdown'),
+  favoritesDropdown: document.querySelector('.favorites-dropdown'),
+
+  celsiusButton:     document.querySelector('.celsius-button'),
+  fahrenheitButton:  document.querySelector('.fahrenheit-button'),
+
+  currentWrapper:    document.querySelector('.current-wrapper'),
+  forecastWrapper:   document.querySelector('.forecast-wrapper')
+};
+/* harmony export (immutable) */ exports["a"] = elements;
+
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__countries__ = __webpack_require__(11);
 /* harmony export (immutable) */ exports["e"] = startSkycons;
 /* harmony export (immutable) */ exports["c"] = getWeekDay;
 /* harmony export (immutable) */ exports["d"] = renderDate;
@@ -995,11 +991,30 @@ function getSkyconClass(code, icon) {
 
 
 /***/ }),
-/* 10 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(1);
-module.exports = __webpack_require__(2);
+"use strict";
+const API_URL = 'https://api.weatherbit.io/v2.0';
+const API_KEY = '3182fa324b4340ef9cb632451ebb05c1'; // e83a8a7ac30d465b93bd8e2bb270bbf7
+
+const get = query => {
+  const url = `${API_URL}${query}&key=${API_KEY}`;
+  return  fetch(url)
+            .then(response => {
+              if (response.ok) {
+                return response.json();
+              }
+            });
+}
+
+const getWeatherInfo = (location, degree) =>
+  Promise.all([ get(`/current?lat=${location.lat}&lon=${location.lng}&units=${degree}`)
+                  .then(info => info.data[0]),
+                get(`/forecast/daily?lat=${location.lat}&lon=${location.lng}&days=8&units=${degree}`)
+                  .then(info => info.data) ]);
+/* harmony export (immutable) */ exports["a"] = getWeatherInfo;
+
 
 
 /***/ })
