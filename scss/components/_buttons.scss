@@ -1,0 +1,12 @@
+button {
+  padding: 0;
+
+  background: none;
+  border: none;
+  outline: none;
+
+  @extend %base-font-set;
+  font-size: 1rem;
+
+  cursor: pointer;
+}

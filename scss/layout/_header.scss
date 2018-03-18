@@ -1,0 +1,69 @@
+header {
+  display: grid;
+  grid-template-columns: 450px 1fr;
+  align-items: center;
+
+  height: 100px;
+
+  .helpers-wrapper {
+    display: flex;
+    margin: 0 40px;
+
+    button {
+      font-weight: bold;
+    }
+
+    .favorites-button {
+      margin-left: 15px;
+      color: $yellow;
+    }
+
+    .celsius-button, .fahrenheit-button {
+      padding: 5px 10px;
+      border: 1px solid $dark-green;
+    }
+
+    .celsius-button {
+      margin-left: auto;
+      border-right: 0;
+    }
+
+    .active {
+      color: #fff;
+      background: $yellow;
+    }
+  }
+
+  .search-wrapper {
+    display: flex;
+    margin: 0 40px;
+
+    .search-input {
+      flex: 1 1 auto;
+      padding: 10px 15px;
+
+      color: $dark-green;
+      @extend %extra-font-set;
+
+      border: 1px solid $light-blue;
+
+      &::placeholder {
+        color: $light-blue;
+        letter-spacing: 5px;
+      }
+    }
+
+    .search-button {
+      width: 100px;
+      padding: 10px 0;
+      margin-left: 15px;
+
+      color: #fff;
+      background: $blue;
+
+      &:hover {
+        background: $dark-blue;
+      }
+    }
+  }
+}

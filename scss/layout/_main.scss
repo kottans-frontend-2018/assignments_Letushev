@@ -1,0 +1,130 @@
+main {
+  display: grid;
+  grid-template-columns: 450px 1fr;
+
+  height: calc(100vh - 100px);
+
+  color: #fff;
+
+  .current-wrapper {
+    position: relative;
+    padding: 25px 40px;
+
+    background: $dark-green;
+
+    h1 {
+      margin: 20px 0;
+
+      color: $yellow;
+      font-size: 2rem;
+      font-weight: bold;
+
+      .country {
+        margin-left: 10px;
+
+        color: #fff;
+        font-size: .7em;
+        font-weight: normal;
+      }
+    }
+
+    .current-main-values {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+
+      .current-temp {
+        font-size: 5rem;
+        line-height: normal;
+      }
+    }
+
+    .description {
+      margin: 15px 0 20px 0;
+
+      color: $white-blue;
+      font-size: 1.3rem;
+    }
+
+    .star {
+      position: absolute;
+      top: 0;
+      right: 10px;
+
+      color: #fff;
+      font-size: 2rem;
+
+      &.favorite {
+        color: $yellow;
+      }
+    }
+  }
+
+  table {
+    width: 100%;
+    padding-top: 15px;
+
+    border-top: 1px solid #fff;
+    border-collapse: separate;
+    border-spacing: 0 5px;
+
+    th {
+      text-align: left;
+    }
+
+    td {
+      text-align: right;
+    }
+  }
+
+  .forecast-wrapper {
+    display: grid;
+    grid-gap: 25px;
+    grid-template-columns: repeat(auto-fill, minmax(180px, auto));
+    align-content: start;
+
+    padding: 40px;
+    overflow: auto;
+
+    background: linear-gradient(to left, $dark-blue, $light-blue);
+
+    .day-forecast {
+      padding: 15px;
+
+      border: 1px solid #fff;
+      box-shadow: 5px 5px 20px $dark-blue;
+
+      text-align: center;
+
+      h2 {
+        font-size: 1.5rem;
+        font-weight: bold;
+      }
+
+      .description {
+        margin: 15px 0 20px 0;
+        font-size: 1.3rem;
+      }
+
+      .day-main-values {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        margin-top: auto;
+
+        ul {
+          margin-left: 15px;
+
+          li:first-child {
+            font-size: 1.3rem;
+          }
+        }
+      }
+    }
+  }
+
+  .wind-dir {
+    display: inline-block;
+  }
+}
